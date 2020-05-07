@@ -1,0 +1,72 @@
+import random
+
+# defining the roles of the game
+game = {
+        "rock" : ["fire", "scissors", "snake", "human", "tree", "wolf", "sponge"],
+        "gun" : ["fire", "scissors", "snake", "human", "tree", "wolf", "rock"],
+        "lightening" : ["fire", "scissors", "snake", "human", "tree", "gun", "rock"],
+        "devil" : ["fire", "scissors", "snake", "human", "lightening", "gun", "rock"],
+        "dragon": ["fire", "scissors", "snake", "devil", "lightening", "gun", "rock"],
+        "water" : ["fire", "scissors", "dragon", "devil", "lightening", "gun", "rock"],
+        "air" : ["fire", "water", "dragon", "devil", "lightening", "gun", "rock"],
+        "paper" : ["air", "water", "dragon", "devil", "lightening", "gun", "rock"],
+        "sponge" : ["air", "water", "dragon", "devil", "lightening", "gun", "paper"],
+        "wolf" : ["air", "water", "dragon", "devil", "lightening", "sponge", "paper"],
+        "tree" : ["air", "water", "dragon", "devil", "wolf", "sponge", "paper"],
+        "human" : ["air", "water", "dragon", "tree", "wolf", "sponge", "paper"],
+        "snake" : ["air", "water", "human", "tree", "wolf", "sponge", "paper"],
+        "scissors" : ["air", "snake", "human", "tree", "wolf", "sponge", "paper"],
+        "fire" : ["scissors", "snake", "human", "tree", "wolf", "sponge", "paper"]
+        }
+
+# initialising the game
+stats = True
+score = 0
+
+# getting user name and calculating the score
+user_name = input("Enter your name: ")
+print("Hello,", user_name)
+rating = open("rating.txt", "r")
+for lines in rating:
+    user_data = lines.split()[0]
+    if user_name == user_data:
+        score = int(lines.split()[1])
+    else:
+        score = 0
+rating.close()
+rating = open("rating.txt", "a")
+
+
+# preparing the game board
+game_board = []
+user_input= input()
+if user_input == "":
+  game_board.append("rock")
+  game_board.append("paper")
+  game_board.append("scissors")
+else:
+  game_board = user_input.split(",")
+
+# game starts here
+print("Okay, let's start")
+while stats:
+  user_choise = input()
+  cpu_choice = random.choice(game_board)
+  cpu_lose = game.get(cpu_choice)
+  if user_choise == "!rating":
+    print("Your rating: ", score)
+  elif user_choise == "!exit":
+    print("Bye!")
+    print(f"{user_name} {score}", file=rating)
+    stats = False
+  elif user_choise == cpu_choice:
+    print(f"There is a draw ({cpu_choice})")
+    score += 50
+  elif user_choise in cpu_lose:
+    print(f"Well done. Computer chose {cpu_choice} and failed")
+    score += 100
+  elif user_choise not in cpu_lose:
+     if user_choise in game_board:
+       print(f"Sorry, but computer chose {cpu_choice}")
+  else:
+    print("Invalid input")
